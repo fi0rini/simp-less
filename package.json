@@ -1,0 +1,22 @@
+{
+  "name": "simp-less",
+  "version": "1.0.2",
+  "description": "watch less file directory and mirror into css output directory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "watch",
+    "less",
+    "css",
+    "compile"
+  ],
+  "author": "nick fiorini <nf071590@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "isadir": "^1.0.1",
+    "less": "^2.5.3",
+    "minimist": "^1.2.0"
+  }
+}
