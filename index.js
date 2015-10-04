@@ -1,4 +1,6 @@
+#!/usr/bin/env node
 'use strict'
+
 // Help functions
 let Log = console.log.bind(console);
 

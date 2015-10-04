@@ -1,5 +1,4 @@
 #simp-less
-`npm i simp-less`
 
 ## usage
 cli 
