@@ -11,9 +11,15 @@ exports.notadir = (dir) => {
 },
 
 // if user is missing options (--in, --out)
-exports.missingargs = () => {
-	Err('Required arguments:')
-	Err('\t--in,  input directory path')
-	Err('\t--out, output directory path')
+exports.usage = () => {
+	Err('simp-less usage:');
+	Err('\t--in \t\t\tinput directory path (required)');
+	Err('\t--out \t\t\toutput directory path (required)');
+	Err('');
+	Err('\t-W\t\t\twatch less files');
+	Err('\t-R,--recursive\t\trecurse or if --recursive specify a depth');
+    Err('\t-m,--minify \t\tminify css output');
+    Err('\t-c,--concat \t\tconcatenate all input files together into one output');
+    Err('');
 	process.exit(1);
 }

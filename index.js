@@ -22,67 +22,96 @@ let iDirectory = argv.in && argv.in.replace(/\/$/,'');
 let oDirectory = argv.out && argv.out.replace(/\/$/,'');
 
 // check arguments
-iDirectory && oDirectory || errors.missingargs();
+iDirectory && oDirectory || errors.usage();
 
 // handle arguments
 isadir(iDirectory) || errors.notADir(iDirectory);
 isadir(oDirectory) || fs.mkdirSync(oDirectory);
 
-// recursive watcher
-let watcher = chokidar.watch(iDirectory, {
-	persistent: true,
-	ignored: /^.*\.(?!less$)[^.]+$/, // This picks up files without ext's (1: needs to be fixed)
-	followSymlinks: false
-});
+let mapDirectory = (path, inD, outD) => {
+	let parsedPath 		= _path.parse(path);
+		parsedPath.dir 	= parsedPath.dir.replace(inD, outD);
+		parsedPath.ext 	= '.css';
+		parsedPath.base = parsedPath.name + parsedPath.ext;
 
-// check if a file is less... (see 1:)
-let isLess = (p) => _path.extname(p) === ".less"
+	let outPath 		= _path.format(parsedPath);
+
+	return outPath;
+}
 
 // compile less into css output
 let compileLess = (path) => {
 	// If it's a less file, then compile
-	isLess(path) && ( () => {
-		let parsedPath 		= _path.parse(path);		
-			parsedPath.dir 	= parsedPath.dir.replace(iDirectory, oDirectory);
-			parsedPath.ext 	= '.css';
-			parsedPath.base = parsedPath.name + parsedPath.ext;
+	let mappedPath = mapDirectory(path, iDirectory, oDirectory);
+	let mappedDir  = _path.parse(mappedPath).dir;
 
-		(() => {
-			let lessData 		= '';
-			let outPath 		= _path.format(parsedPath);
-			let outputStream 	= fs.createWriteStream(outPath);
+	if(!isadir(mappedDir)) {
+		fs.mkdirSync(mappedDir);
+	}
 
-			Log('mapping:', path,'->', outPath);
+	(() => {
+		let lessData 		= '';
+		let outputStream 	= fs.createWriteStream(mappedPath);
 
-			fs.createReadStream(path)
-				.on('data', (data) 	=> lessData += data)
-				.on('end', 	() 		=> 
-					less.render(
-						lessData, 
-						(err, output) => {
-							if(err) throw err
-							outputStream.write(output.css) 
-						}
-					)
+		Log('mapping:', path, '->', mappedPath);
+
+		fs.createReadStream(path)
+			.on('data', (data) 	=> lessData += data)
+			.on('end', 	() 		=>
+				less.render(
+					lessData, {
+                        compress: argv.m || false // argv.m is minify switch
+                    },
+					(err, output) => {
+						if(err) throw err
+						outputStream.write(output.css);
+					}
 				)
-				.on('error', (err) 	=> console.log(err));
-		}());
-
+			)
+			.on('error', (err) 	=> console.log(err));
 	}());
+
 }
 
+// delete less file
 let deleteLess	= (path) => {
 	isLess(path) && Log('Delete less 	:', path);
 }
 
+// makeDir for less
 let makeDir = (path) => {
 	isLess(path) && Log('Makedir less 	:', path);
-	
 }
 
-watcher.on('add', 	 compileLess);
-watcher.on('change', compileLess);
+// check if a file is less... (see 1:)
+let isLess = (p) => _path.extname(p) === ".less"
 
-watcher.on('addDir', makeDir);
-watcher.on('unlink', deleteLess);
-watcher.on('error', (err) => console.error(err));
+if(argv.W) {
+	// setup watcher
+	let watcher = chokidar.watch(iDirectory, {
+		depth: 			argv.R ? 99 : argv.recursive ? argv.recursive : 0,
+		ignored: 		/^.*\.(?!less$)[^.]+$/, // This picks up files without ext's (1: needs to be fixed)
+		persistent: 	true,
+		followSymlinks: false
+	});
+
+	watcher.on( 'add', (path) => {
+		if( isLess(path) ) {
+			compileLess(path)
+		}
+	});
+
+	watcher.on( 'change', (path) => {
+		if( isLess(path) ) {
+			compileLess(path)
+		}
+	});
+
+	watcher.on('addDir', makeDir);
+	watcher.on('unlink', deleteLess);
+	watcher.on('error', (err) => console.error(err));
+} else {
+	//TODO
+	//compile less code once into output directory
+	// walkdir() && compile less
+}

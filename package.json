@@ -1,6 +1,6 @@
 {
   "name": "simp-less",
-  "version": "1.0.4",
+  "version": "1.1.5",
   "description": "watch less file directory and mirror into css output directory",
   "main": "index.js",
   "scripts": {
@@ -21,14 +21,43 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nf071590/simp-less.git"
+    "url": "git+https://github.com/nf071590/simp-less.git"
   },
-  "author": "nick fiorini <nf071590@gmail.com>",
+  "author": {
+    "name": "nick fiorini",
+    "email": "nf071590@gmail.com"
+  },
   "license": "ISC",
   "dependencies": {
     "chokidar": "^1.2.0",
     "isadir": "^1.0.1",
     "less": "^2.5.3",
     "minimist": "^1.2.0"
-  }
+  },
+  "gitHead": "bd532989ef9602d2e128086490bac9375f9e6838",
+  "bugs": {
+    "url": "https://github.com/nf071590/simp-less/issues"
+  },
+  "homepage": "https://github.com/nf071590/simp-less#readme",
+  "_id": "simp-less@1.1.5",
+  "_shasum": "ff79caa7e9143790ca1b0dd9ecb18768b801e9c7",
+  "_from": "simp-less@*",
+  "_npmVersion": "2.14.4",
+  "_nodeVersion": "4.1.1",
+  "_npmUser": {
+    "name": "nf071590",
+    "email": "nf071590@gmail.com"
+  },
+  "dist": {
+    "shasum": "ff79caa7e9143790ca1b0dd9ecb18768b801e9c7",
+    "tarball": "http://registry.npmjs.org/simp-less/-/simp-less-1.1.5.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "nf071590",
+      "email": "nf071590@gmail.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/simp-less/-/simp-less-1.1.5.tgz"
 }

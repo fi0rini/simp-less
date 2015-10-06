@@ -1,15 +1,29 @@
 #simp-less
+a simple package for watching a less directory and compiling it into source code
+
+##installation
+	npm i simp-less [-g]|[--save-dev]|[--save]
 
 ## usage
-cli 
+*cli*
 
-`simp-less --in directory --out directory`
+	usage: simp-less --in directory --out directory
+		--in				directory in
+		--out 				directory out
+		-R,--recursive		recursive watch (with --recursive specify level) default 0
+		-W					watch
+		-m,--minify			minify css output
+    	-c,--concat 		concatenate all input files together into one output
+	
 
-for npm scripts
+*npm scripts*
 
-`scripts: {
-    "watch-less": "node simp-less --in directory --out directory"
-}`
+	scripts: {
+		...
+	    "watch:less": "simp-less --in directory --out directory -WR",
+		...
+	}
 
-if out directory does not exist it will be created for you
+## notes
+still in progress. basic recursive watch with/without minification is most functionality right now. One time compilation is under construction.
 
